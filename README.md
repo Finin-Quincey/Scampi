@@ -15,7 +15,7 @@
 - picam 1.1.1
 
 ## 📌 Useful Links
-[Raspberry Pi GPIO Pinout](https://pinout.xyz/)
+[Raspberry Pi GPIO Pinout](https://pinout.xyz/)  
 [Waveshare 3.2" LCD Wiki Page](https://www.waveshare.com/wiki/3.2inch_RPi_LCD_(B))  
 [Pi4J Homepage](https://pi4j.com/1.2/)  
 [Pi4J on GitHub](https://github.com/Pi4J/pi4j/)  
