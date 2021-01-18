@@ -9,6 +9,7 @@ public class CameraUI {
 
 	public static final Logger logger = Logger.getLogger("scampi");
 
+	/** True to show the cursor and window borders, false to make it fullscreen (for use on the touchscreen). */
 	public static final boolean DEVELOPMENT_MODE = true;
 
 	public static final int SCREEN_WIDTH = 320;
