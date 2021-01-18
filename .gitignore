@@ -1,3 +1,13 @@
+Thumbs.db
+
+# IntelliJ IDEA files
+.idea
+out/*
+!out/artifacts/
+out/artifacts/Scampi_jar/*
+!out/artifacts/Scampi_jar/Scampi.jar
+*.iml
+
 # Compiled class file
 *.class
 
