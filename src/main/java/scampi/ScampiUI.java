@@ -1,21 +1,32 @@
 package scampi;
 
+import uk.co.caprica.picam.CameraException;
+import uk.co.caprica.picam.NativeLibraryException;
+import uk.co.caprica.picam.PicamNativeLibrary;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
-public class CameraUI {
+public class ScampiUI {
 
 	public static final Logger logger = Logger.getLogger("scampi");
 
 	/** True to show the cursor and window borders, false to make it fullscreen (for use on the touchscreen). */
-	public static final boolean DEVELOPMENT_MODE = true;
+	public static final boolean DEVELOPMENT_MODE = false;
 
+	/** Width of the LCD screen in pixels */
 	public static final int SCREEN_WIDTH = 320;
+	/** Height of the LCD screen in pixels */
 	public static final int SCREEN_HEIGHT = 240;
 
-	public static final int FRAMERATE = 30;
+	/** Camera sensor width in pixels */
+	public static final int CAMERA_WIDTH = 2592;
+	/** Camera sensor height in pixels */
+	public static final int CAMERA_HEIGHT = 1944;
+
+	public static final int FRAMERATE = 1;
 
 	public static final Font FONT = new Font("Segoe UI Symbol", Font.PLAIN, 24);
 
@@ -24,7 +35,13 @@ public class CameraUI {
 	/** The {@link Timer} object used to update the UI at regular intervals. */
 	private final Timer timer;
 
-	public CameraUI(){
+	/** A {@link JLabel} that holds the video feed itself. This label's icon image is updated each frame to display the
+	 * video feed. */
+	private JLabel videoContainer;
+
+	private FrameSupplier frameSupplier;
+
+	public ScampiUI(){
 
 		// Create and set up the window
 		jFrame = new JFrame("Camera Interface");
@@ -48,6 +65,12 @@ public class CameraUI {
 		timer.setInitialDelay(50);
 		timer.start();
 
+		try {
+			frameSupplier = new PiCameraFrameSupplier(CAMERA_WIDTH, CAMERA_HEIGHT);
+		}catch(CameraException e){
+			e.printStackTrace();
+		}
+
 	}
 
 	/** Populates the given pane with the contents of the app window. */
@@ -58,6 +81,8 @@ public class CameraUI {
 			return;
 		}
 
+		pane.setBackground(Color.DARK_GRAY);
+
 		if(!DEVELOPMENT_MODE){
 			// Transparent 16 x 16 pixel cursor image
 			BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -67,25 +92,40 @@ public class CameraUI {
 			pane.setCursor(blankCursor);
 		}
 
-		JLabel label = new JLabel("Hello world!");
-		label.setFont(FONT);
-		label.setForeground(new Color(0x00ffff));
-		pane.add(label);
+		videoContainer = new JLabel((ImageIcon)null); // Will be initialised later
+		videoContainer.setVerticalTextPosition(SwingConstants.CENTER);
+		videoContainer.setFont(FONT);
+		videoContainer.setForeground(new Color(0xff6655));
+		videoContainer.setText("Camera error!");
 
-		// TODO: Add stuff
 	}
 
 	/** Called by the timer to update the window contents. */
 	private void update(){
 
+		if(frameSupplier != null){
 
+			BufferedImage frame = frameSupplier.getFrame();
+
+			videoContainer.setIcon(new ImageIcon(frame));
+			videoContainer.setText(null);
+
+		}
 
 		jFrame.repaint();
 	}
 
 	public static void main(String[] args){
+
 		logger.info("Initialising");
-		SwingUtilities.invokeLater(CameraUI::new);
+
+		try {
+			PicamNativeLibrary.installTempLibrary();
+		}catch(NativeLibraryException e){
+			e.printStackTrace();
+		}
+
+		SwingUtilities.invokeLater(ScampiUI::new);
 	}
 
 }
