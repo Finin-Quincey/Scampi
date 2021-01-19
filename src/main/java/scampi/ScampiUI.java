@@ -20,11 +20,11 @@ public class ScampiUI {
 	public static final int SCREEN_HEIGHT = 240;
 
 	/** Camera sensor width in pixels */
-	public static final int CAMERA_WIDTH = 2592;
+	public static final int CAMERA_WIDTH = 320;
 	/** Camera sensor height in pixels */
-	public static final int CAMERA_HEIGHT = 1944;
+	public static final int CAMERA_HEIGHT = 240;
 
-	public static final int FRAMERATE = 20;
+	public static final int FRAMERATE = 10;
 
 	public static final Font FONT = new Font("Segoe UI Symbol", Font.PLAIN, 24);
 
@@ -95,6 +95,8 @@ public class ScampiUI {
 		videoContainer.setFont(FONT);
 		videoContainer.setForeground(new Color(0xff6655));
 		videoContainer.setText("Camera error!");
+
+		pane.add(videoContainer);
 
 	}
 
