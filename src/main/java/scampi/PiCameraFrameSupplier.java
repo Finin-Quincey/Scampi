@@ -1,48 +1,36 @@
 package scampi;
 
-import uk.co.caprica.picam.*;
-import uk.co.caprica.picam.enums.Encoding;
+import com.hopding.jrpicam.RPiCamera;
+import com.hopding.jrpicam.enums.Encoding;
+import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class PiCameraFrameSupplier implements FrameSupplier {
 
-	/** A reference to the {@link Camera} object. */
-	private Camera camera;
+	/** A reference to the {@link RPiCamera} object. */
+	private RPiCamera camera;
 
 	private final int width, height;
 
-	public PiCameraFrameSupplier(int width, int height) throws CameraException {
+	public PiCameraFrameSupplier(int width, int height) throws FailedToRunRaspistillException {
 
 		this.width = width;
 		this.height = height;
 
-		// Camera setup
-		CameraConfiguration cameraConfig = CameraConfiguration.cameraConfiguration()
-				.width(width)
-				.height(height)
-				.encoding(Encoding.BGR24); // Blue-green-red matches the buffered image byte format below
-
-		camera = new Camera(cameraConfig);
+		camera = new RPiCamera().setWidth(width).setHeight(height).setEncoding(Encoding.BMP);
 
 	}
 
 	@Override
 	public BufferedImage getFrame(){
 
-		BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage frame = null;
 
-		try{
-
-			byte[] bytes = camera.takePicture(new ByteArrayPictureCaptureHandler());
-
-			ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-			ImageIO.read(stream);
-
-		}catch(CaptureFailedException | IOException e){
+		try {
+			frame = camera.takeBufferedStill(width, height);
+		}catch(IOException | InterruptedException e){
 			e.printStackTrace();
 		}
 

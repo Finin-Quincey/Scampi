@@ -1,8 +1,6 @@
 package scampi;
 
-import uk.co.caprica.picam.CameraException;
-import uk.co.caprica.picam.NativeLibraryException;
-import uk.co.caprica.picam.PicamNativeLibrary;
+import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +24,7 @@ public class ScampiUI {
 	/** Camera sensor height in pixels */
 	public static final int CAMERA_HEIGHT = 1944;
 
-	public static final int FRAMERATE = 1;
+	public static final int FRAMERATE = 20;
 
 	public static final Font FONT = new Font("Segoe UI Symbol", Font.PLAIN, 24);
 
@@ -67,7 +65,7 @@ public class ScampiUI {
 
 		try {
 			frameSupplier = new PiCameraFrameSupplier(CAMERA_WIDTH, CAMERA_HEIGHT);
-		}catch(CameraException e){
+		}catch(FailedToRunRaspistillException e){
 			e.printStackTrace();
 		}
 
@@ -116,15 +114,7 @@ public class ScampiUI {
 	}
 
 	public static void main(String[] args){
-
 		logger.info("Initialising");
-
-		try {
-			PicamNativeLibrary.installTempLibrary();
-		}catch(NativeLibraryException e){
-			e.printStackTrace();
-		}
-
 		SwingUtilities.invokeLater(ScampiUI::new);
 	}
 
