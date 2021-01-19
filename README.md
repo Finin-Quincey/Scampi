@@ -12,7 +12,7 @@
 - Raspbian Stretch (currently the LCD manufacturer-supplied disk image)
 - Java 8 (Swing-based UI)
 - Pi4J 1.2
-- picam 1.1.1
+- JRPiCam 1.1.1
 
 ## 📌 Useful Links
 [Raspberry Pi GPIO Pinout](https://pinout.xyz/)  
