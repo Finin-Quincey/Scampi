@@ -21,3 +21,4 @@
 [Pi4J on GitHub](https://github.com/Pi4J/pi4j/)  
 [JRPiCam Wiki](https://github.com/Hopding/JRPiCam/wiki)  
 [JRPiCam on GitHub](https://github.com/Hopding/JRPiCam)  
+[raspistill/raspivid documentation](https://www.raspberrypi.org/documentation/raspbian/applications/camera.md)  
