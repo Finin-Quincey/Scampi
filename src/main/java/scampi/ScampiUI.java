@@ -1,12 +1,16 @@
 package scampi;
 
-import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.WebcamResolution;
+import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 import scampi.gpio.GPIOManager;
 import scampi.gpio.PiGPIOManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 public class ScampiUI {
@@ -22,11 +26,11 @@ public class ScampiUI {
 	public static final int SCREEN_HEIGHT = 240;
 
 	/** Camera sensor width in pixels */
-	public static final int CAMERA_WIDTH = 320;
+	public static final int CAMERA_WIDTH = 2592;
 	/** Camera sensor height in pixels */
-	public static final int CAMERA_HEIGHT = 240;
+	public static final int CAMERA_HEIGHT = 1944;
 
-	public static final int FRAMERATE = 10;
+	public static final int FRAMERATE = 30;
 
 	public static final Font FONT = new Font("Segoe UI Symbol", Font.PLAIN, 24);
 
@@ -39,8 +43,12 @@ public class ScampiUI {
 	 * video feed. */
 	private JLabel videoContainer;
 
-	private FrameSupplier frameSupplier;
+	private Webcam camera;
+
+	private WebcamPanel webcamPanel;
+
 	// Hardware interfaces
+//	private FrameSupplier frameSupplier;
 	private GPIOManager gpioManager;
 
 	public ScampiUI(){
@@ -67,11 +75,19 @@ public class ScampiUI {
 		timer.setInitialDelay(50);
 		timer.start();
 
-		try {
-			frameSupplier = new PiCameraFrameSupplier(CAMERA_WIDTH, CAMERA_HEIGHT);
-		}catch(FailedToRunRaspistillException e){
-			e.printStackTrace();
-		}
+//		try {
+//			frameSupplier = new PiCameraFrameSupplier(CAMERA_WIDTH, CAMERA_HEIGHT);
+//		}catch(FailedToRunRaspistillException e){
+//			e.printStackTrace();
+//		}
+
+		camera = Webcam.getDefault();
+		camera.setViewSize(WebcamResolution.QVGA.getSize());
+		camera.setParameters(Collections.singletonMap("sensor_mode", 5));
+		camera.open();
+
+		for(int i=0; i<100; i++) camera.getImage();
+
 		gpioManager = new PiGPIOManager();
 
 	}
@@ -95,6 +111,19 @@ public class ScampiUI {
 			pane.setCursor(blankCursor);
 		}
 
+//		Webcam webcam = Webcam.getDefault();
+//		webcam.setViewSize(WebcamResolution.QVGA.getSize());
+
+//		webcamPanel = new WebcamPanel(webcam);
+//		webcamPanel.setFPSDisplayed(true);
+//		webcamPanel.setDisplayDebugInfo(true);
+//		webcamPanel.setImageSizeDisplayed(true);
+//		webcamPanel.setFPSLimit(FRAMERATE);
+//
+//		pane.add(webcamPanel);
+//
+//		webcamPanel.add(new JLabel("Hello world!"));
+
 		videoContainer = new JLabel((ImageIcon)null); // Will be initialised later
 		videoContainer.setVerticalTextPosition(SwingConstants.CENTER);
 		videoContainer.setFont(FONT);
@@ -108,15 +137,21 @@ public class ScampiUI {
 	/** Called by the timer to update the window contents. */
 	private void update(){
 
-		if(frameSupplier != null){
+//		if(frameSupplier != null){
+//
+//			BufferedImage frame = frameSupplier.getFrame();
+//
+//			videoContainer.setIcon(new ImageIcon(frame));
+//			videoContainer.setText(null);
+//
+//		}
 
-			BufferedImage frame = frameSupplier.getFrame();
+		BufferedImage frame = camera.getImage();
+		videoContainer.setIcon(new ImageIcon(frame));
+		videoContainer.setText(null);
 
-			videoContainer.setIcon(new ImageIcon(frame));
-			videoContainer.setText(null);
 		gpioManager.setStatusColour(Color.getHSBColor((System.currentTimeMillis() % 3000) / 3000f, 1, 1));
 
-		}
 		gpioManager.setShutterLEDState(System.currentTimeMillis() % 1000 > 500);
 
 		jFrame.repaint();
@@ -124,6 +159,7 @@ public class ScampiUI {
 
 	public static void main(String[] args){
 		logger.info("Initialising");
+		Webcam.setDriver(new V4l4jDriver());
 		SwingUtilities.invokeLater(ScampiUI::new);
 	}
 
