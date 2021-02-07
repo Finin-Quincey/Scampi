@@ -1,4 +1,4 @@
-package scampi;
+package scampi.camera;
 
 import java.awt.image.BufferedImage;
 

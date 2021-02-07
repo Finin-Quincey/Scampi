@@ -1,8 +1,8 @@
-package scampi;
+package scampi.camera;
 
 import com.hopding.jrpicam.RPiCamera;
-import com.hopding.jrpicam.enums.Encoding;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
+import scampi.ScampiUI;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
