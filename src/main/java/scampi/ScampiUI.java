@@ -1,6 +1,8 @@
 package scampi;
 
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
+import scampi.gpio.GPIOManager;
+import scampi.gpio.PiGPIOManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +40,8 @@ public class ScampiUI {
 	private JLabel videoContainer;
 
 	private FrameSupplier frameSupplier;
+	// Hardware interfaces
+	private GPIOManager gpioManager;
 
 	public ScampiUI(){
 
@@ -68,6 +72,7 @@ public class ScampiUI {
 		}catch(FailedToRunRaspistillException e){
 			e.printStackTrace();
 		}
+		gpioManager = new PiGPIOManager();
 
 	}
 
@@ -109,8 +114,10 @@ public class ScampiUI {
 
 			videoContainer.setIcon(new ImageIcon(frame));
 			videoContainer.setText(null);
+		gpioManager.setStatusColour(Color.getHSBColor((System.currentTimeMillis() % 3000) / 3000f, 1, 1));
 
 		}
+		gpioManager.setShutterLEDState(System.currentTimeMillis() % 1000 > 500);
 
 		jFrame.repaint();
 	}
