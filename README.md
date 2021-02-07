@@ -12,12 +12,13 @@
 - Raspbian Stretch (currently the LCD manufacturer-supplied disk image)
 - Java 8 (Swing-based UI)
 - Pi4J 1.2
-- picam 1.1.1
+- JRPiCam 1.1.1
 
 ## 📌 Useful Links
 [Raspberry Pi GPIO Pinout](https://pinout.xyz/)  
 [Waveshare 3.2" LCD Wiki Page](https://www.waveshare.com/wiki/3.2inch_RPi_LCD_(B))  
 [Pi4J Homepage](https://pi4j.com/1.2/)  
 [Pi4J on GitHub](https://github.com/Pi4J/pi4j/)  
-[Picam Homepage](https://capricasoftware.co.uk/projects/picam)  
-[Picam on GitHub](https://github.com/caprica/picam/tree/picam-1.x)  
+[JRPiCam Wiki](https://github.com/Hopding/JRPiCam/wiki)  
+[JRPiCam on GitHub](https://github.com/Hopding/JRPiCam)  
+[raspistill/raspivid documentation](https://www.raspberrypi.org/documentation/raspbian/applications/camera.md)  
